@@ -1,0 +1,1 @@
+javascript:((function(){var a,b,c;c="https://bing.com",b=document.createElement("iframe"),b.setAttribute("src",c),b.setAttribute("id","rusic-modal"),b.setAttribute("style","position: fixed; width: 25%; height: 50%; top: 0; left: 2; right: 0; bottom: 2; z-index: 99999999999; background-color: #fff;"),a=document.getElementsByTagName("body")[0],a.appendChild(b)})).call(this)
