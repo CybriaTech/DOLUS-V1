@@ -1,0 +1,1 @@
+javascript:(function(){var iframes = document.getElementsByTagName('iframe');for (var i = 0; i < iframes.length; i++) {var iframe = iframes[i];if (iframe.id === 'rusic-modal') {iframe.parentNode.removeChild(iframe);}}})();
