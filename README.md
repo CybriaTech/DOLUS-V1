@@ -1,6 +1,6 @@
-# Deceptium V1.5
+# Deceptium Bookmarklet Version
 
-📓Deceptium is a client that can bypass LockDown Browser using simple IFrame Bookmarklets📚
+📓Deceptium is a client that can bypass Lockdown Browser.
 
 ## Supports
 
