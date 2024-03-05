@@ -120,8 +120,12 @@ input:focus {
         </div>
     </div>
   <script>
-    function close() {
-    document.querySelector('.window').remove();
+function close() {
+    var windows = document.getElementsByClassName('window');
+    for (var i = 0; i < windows.length; i++) {
+        var windowDiv = windows[i];
+        windowDiv.parentNode.removeChild(windowDiv);
+    }
 }
   </script>
 </body>
