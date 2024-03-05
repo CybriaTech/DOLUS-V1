@@ -129,7 +129,7 @@ iframe {
             <input type="text" placeholder="Search with Deceptium V2" id="searchInput">
             </form>
             <div id="searchResults">
-                <iframe id="googleFrame"></iframe>
+                <iframe id="bing"></iframe>
             </div>
         </div>
     </div>
@@ -207,12 +207,12 @@ iframe {
 
 function search() {
     var input = document.getElementById('searchInput').value.trim();
-    var iframe = document.getElementById('googleFrame');
+    var iframe = document.getElementById('bing');
     var url = '';
     if (input.startsWith('http://') || input.startsWith('https://')) {
         url = input;
     } else {
-        url = 'https://www.google.com/search?q=' + encodeURIComponent(input);
+        url = 'https://www.bing.com/search?q=' + encodeURIComponent(input);
     }
     iframe.src = url;
 }
