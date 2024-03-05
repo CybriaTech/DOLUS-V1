@@ -120,12 +120,62 @@ input:focus {
         </div>
     </div>
   <script>
-function close() {
-    var windows = document.getElementsByClassName('window');
-    for (var i = 0; i < windows.length; i++) {
-        var windowDiv = windows[i];
-        windowDiv.parentNode.removeChild(windowDiv);
+const windowDiv = document.getElementById('window');
+const titleBar = document.getElementById('title-bar');
+
+let offsetX, offsetY;
+
+titleBar.addEventListener('mousedown', startDrag);
+
+function startDrag(e) {
+    offsetX = e.clientX - windowDiv.getBoundingClientRect().left;
+    offsetY = e.clientY - windowDiv.getBoundingClientRect().top;
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', stopDrag);
+}
+
+function drag(e) {
+    windowDiv.style.left = e.clientX - offsetX + 'px';
+    windowDiv.style.top = e.clientY - offsetY + 'px';
+}
+
+function stopDrag() {
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+}
+
+windowDiv.addEventListener('mousedown', startResize);
+
+function startResize(e) {
+    e.preventDefault();
+
+    const initialWidth = windowDiv.offsetWidth;
+    const initialHeight = windowDiv.offsetHeight;
+    const startX = e.clientX;
+    const startY = e.clientY;
+
+    document.addEventListener('mousemove', resize);
+
+    function resize(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        windowDiv.style.width = initialWidth + dx + 'px';
+        windowDiv.style.height = initialHeight + dy + 'px';
     }
+
+    document.addEventListener('mouseup', stopResize);
+
+    function stopResize() {
+        document.removeEventListener('mousemove', resize);
+        document.removeEventListener('mouseup', stopResize);
+    }
+}
+
+function close() {
+    var windowDiv = document.getElementById('window');
+    windowDiv.parentNode.removeChild(windowDiv);
 }
   </script>
 </body>
