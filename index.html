@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
 <style>
 body {
     margin: 0;
@@ -104,7 +105,7 @@ input:focus {
 </head>
 <body>
     <div class="window">
-        <div class="title-bar">
+        <div class="title-bar" id="draggable">
             <div class="title">Deceptium V2</div>
             <div class="btns">
                 <div class="close-btn" onclick="close()"></div>
@@ -119,64 +120,67 @@ input:focus {
             </form>
         </div>
     </div>
-  <script>
-const windowDiv = document.getElementById('window');
-const titleBar = document.getElementById('title-bar');
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script>
+    interact('#draggable')
+        .draggable({
+            listeners: {
+                start (event) {
+                    event.interactable.classList.add('dragging');
+                },
+                move (event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-let offsetX, offsetY;
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                end (event) {
+                    event.interactable.classList.remove('dragging');
+                }
+            }
+        })
+        .resizable({
+            edges: { bottomRight: true },
+            listeners: {
+                move (event) {
+                    const target = event.target;
+                    let x = parseFloat(target.getAttribute('data-x')) || 0;
+                    let y = parseFloat(target.getAttribute('data-y')) || 0;
 
-titleBar.addEventListener('mousedown', startDrag);
+                    target.style.width = event.rect.width + 'px';
+                    target.style.height = event.rect.height + 'px';
 
-function startDrag(e) {
-    offsetX = e.clientX - windowDiv.getBoundingClientRect().left;
-    offsetY = e.clientY - windowDiv.getBoundingClientRect().top;
+                    x += event.deltaRect.left;
+                    y += event.deltaRect.top;
 
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', stopDrag);
-}
+                    target.style.transform = `translate(${x}px, ${y}px)`;
 
-function drag(e) {
-    windowDiv.style.left = e.clientX - offsetX + 'px';
-    windowDiv.style.top = e.clientY - offsetY + 'px';
-}
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            }
+        })
+        .on('doubletap', function (event) {
+            const target = event.target;
+            target.classList.toggle('maximized');
+            if (target.classList.contains('maximized')) {
+                target.style.width = '100vw';
+                target.style.height = '100vh';
+                target.style.transform = 'translate(0, 0)';
+            } else {
+                target.style.width = '600px';
+                target.style.height = '400px';
+                target.style.transform = 'translate(-50%, -50%)';
+            }
+        });
 
-function stopDrag() {
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('mouseup', stopDrag);
-}
-
-windowDiv.addEventListener('mousedown', startResize);
-
-function startResize(e) {
-    e.preventDefault();
-
-    const initialWidth = windowDiv.offsetWidth;
-    const initialHeight = windowDiv.offsetHeight;
-    const startX = e.clientX;
-    const startY = e.clientY;
-
-    document.addEventListener('mousemove', resize);
-
-    function resize(e) {
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        windowDiv.style.width = initialWidth + dx + 'px';
-        windowDiv.style.height = initialHeight + dy + 'px';
+    function close() {
+        var windowDiv = document.querySelector('.window');
+        windowDiv.parentNode.removeChild(windowDiv);
     }
-
-    document.addEventListener('mouseup', stopResize);
-
-    function stopResize() {
-        document.removeEventListener('mousemove', resize);
-        document.removeEventListener('mouseup', stopResize);
-    }
-}
-
-function close() {
-    var windowDiv = document.getElementById('window');
-    windowDiv.parentNode.removeChild(windowDiv);
-}
   </script>
 </body>
 </html>
