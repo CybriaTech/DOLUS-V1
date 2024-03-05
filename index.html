@@ -104,8 +104,8 @@ input:focus {
 </style>
 </head>
 <body>
-    <div class="window" id="draggable">
-        <div class="title-bar">
+    <div class="window">
+        <div class="title-bar" id="draggable">
             <div class="title">Deceptium V2</div>
             <div class="btns">
                 <div class="close-btn" onclick="close()"></div>
@@ -129,6 +129,61 @@ input:focus {
                 restriction: 'parent',
                 endOnly: true,
                 elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+            }
+        });
+
+    interact('#draggable')
+        .draggable({
+            listeners: {
+                start (event) {
+                    event.interactable.classList.add('dragging');
+                },
+                move (event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                end (event) {
+                    event.interactable.classList.remove('dragging');
+                }
+            }
+        })
+        .resizable({
+            edges: { bottomRight: true },
+            listeners: {
+                move (event) {
+                    const target = event.target;
+                    let x = parseFloat(target.getAttribute('data-x')) || 0;
+                    let y = parseFloat(target.getAttribute('data-y')) || 0;
+
+                    target.style.width = event.rect.width + 'px';
+                    target.style.height = event.rect.height + 'px';
+
+                    x += event.deltaRect.left;
+                    y += event.deltaRect.top;
+
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            }
+        })
+        .on('doubletap', function (event) {
+            const target = event.target;
+            target.classList.toggle('maximized');
+            if (target.classList.contains('maximized')) {
+                target.style.width = '100vw';
+                target.style.height = '100vh';
+                target.style.transform = 'translate(0, 0)';
+            } else {
+                target.style.width = '600px';
+                target.style.height = '400px';
+                target.style.transform = 'translate(-50%, -50%)';
             }
         });
 
