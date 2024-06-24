@@ -1,4 +1,4 @@
-# DOLUS V1
+# DOLUS
 
 ## Description:
 
